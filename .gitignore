@@ -3,6 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 genaivenv/
+.DS_Store
 
 # C extensions
 *.so
