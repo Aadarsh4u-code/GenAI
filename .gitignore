@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 genaivenv/
 chatbotvenv/
+chatbot/__pycache__/
 .DS_Store
 
 # C extensions
