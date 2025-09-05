@@ -30,21 +30,42 @@ if st.sidebar.button("New Chat", type='primary'):
 
 st.sidebar.header("My Conversations")
 
-for thread_id in st.session_state['chat_threads'][::-1]:
-    if st.sidebar.button(str(thread_id)):
-        st.session_state['thread_id'] = thread_id
-        messages = load_conversation(thread_id, chatbot)
 
-        temp_messages = []
+
+for thread_id in st.session_state.get('chat_threads', [])[::-1]:
+    
+    # Load messages for this thread
+    messages = load_conversation(thread_id, chatbot)  # returns list of HumanMessage/AIMessage
+
+    # Prepare message_history for session state
+    temp_messages = []
+    first_user_msg = None
+
+    if messages:
         for msg in messages:
-            if isinstance(msg, HumanMessage):
-                role = 'user'
-            else:
-                role = 'assistance'
+            role = 'user' if isinstance(msg, HumanMessage) else 'assistant'
             temp_messages.append({'role': role, 'content': msg.content})
+        
+        # Get first user message for display
+        first_user_msg = next(
+            (msg.content for msg in messages if isinstance(msg, HumanMessage)), 
+            None
+        )
+
+    # Update message_history for current thread
+    if st.session_state.get('thread_id') == thread_id:
         st.session_state['message_history'] = temp_messages
 
+    # Sidebar button title
+    if first_user_msg:
+        button_title = " ".join(first_user_msg.split()[:4])  # first 4 words
+    else:
+        button_title = "Current Chat"
 
+    # Display button
+    if st.sidebar.button(button_title, key=str(thread_id)):
+        st.session_state['thread_id'] = thread_id
+        st.session_state['message_history'] = temp_messages
 
 
 
