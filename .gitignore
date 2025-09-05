@@ -6,6 +6,7 @@ genaivenv/
 chatbotvenv/
 chatbot/__pycache__/
 .DS_Store
+db/
 
 # C extensions
 *.so
